@@ -1,5 +1,4 @@
 {
-  "$schema": "https://raw.githubusercontent.com/riddlemd/KHost.Releases/main/plugins.schema.json",
   "schemaVersion": 1,
   "plugins": [
     {
