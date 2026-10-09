@@ -1,0 +1,23 @@
+name: Validate
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+  # A release asset can vanish from GitHub long after its entry merged.
+  schedule:
+    - cron: "17 6 * * 1"
+
+permissions:
+  contents: read
+
+jobs:
+  plugins:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Check plugins.json and every release it lists
+        run: python3 tools/validate.py plugins.json --github

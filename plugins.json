@@ -1,0 +1,99 @@
+{
+  "$schema": "https://raw.githubusercontent.com/riddlemd/KHost.Releases/main/plugins.schema.json",
+  "schemaVersion": 1,
+  "plugins": [
+    {
+      "id": "c7a41e92-3d58-4b06-8f13-6ad9c25e7b40",
+      "name": "Chromecast",
+      "author": "KHost",
+      "description": "Sends the song to a Chromecast receiver on the local network.",
+      "repository": "https://github.com/riddlemd/KHost.Plugins.Chromecast",
+      "capabilities": [
+        "Display provider"
+      ],
+      "releases": [
+        {
+          "version": "1.0.0",
+          "apiVersion": 1,
+          "url": "https://github.com/riddlemd/KHost.Plugins.Chromecast/releases/download/v1.0.0/KHost.Plugins.Chromecast-1.0.0.zip",
+          "sha256": "da1eb19205ef9a9ba8f2f0e4d0f5aa0a51f92f6c152f657c4ee71a7b4c556629",
+          "sizeBytes": 1197565
+        }
+      ]
+    },
+    {
+      "id": "6b1d3a58-4f27-4c0e-9a11-2e5c7d8b4f36",
+      "name": "Spotify Break Music",
+      "author": "KHost",
+      "description": "Plays break music through the Spotify desktop app on this machine.",
+      "repository": "https://github.com/riddlemd/KHost.Plugins.Spotify",
+      "capabilities": [
+        "Break music"
+      ],
+      "releases": [
+        {
+          "version": "1.0.0",
+          "apiVersion": 1,
+          "url": "https://github.com/riddlemd/KHost.Plugins.Spotify/releases/download/v1.0.0/KHost.Plugins.Spotify-1.0.0.zip",
+          "sha256": "2f88b7995d3d81460a271bfc00012b7af405eb8869702213b01d85e1150b9aa0",
+          "sizeBytes": 46884
+        },
+        {
+          "version": "1.0.0",
+          "apiVersion": 1,
+          "url": "https://github.com/riddlemd/KHost.Plugins.Spotify/releases/download/v1.0.0/KHost.Plugins.Spotify-1.0.0-win.zip",
+          "sha256": "1b5166dd42482d65234c5e916b4959f47be5bff6480f273658d9f756d98438c8",
+          "sizeBytes": 6735797,
+          "rid": "win"
+        }
+      ]
+    },
+    {
+      "id": "0ebd4267-16d2-495e-9c3e-f8f49b6ec389",
+      "name": "YouTube Music Break Music",
+      "author": "KHost",
+      "description": "Plays break music through YouTube Music on this machine: the app installed in Microsoft Edge on Windows, or KHost\u0027s own YouTube Music app on macOS.",
+      "repository": "https://github.com/riddlemd/KHost.Plugins.YouTubeMusic",
+      "capabilities": [
+        "Break music"
+      ],
+      "releases": [
+        {
+          "version": "1.0.0",
+          "apiVersion": 1,
+          "url": "https://github.com/riddlemd/KHost.Plugins.YouTubeMusic/releases/download/v1.0.0/KHost.Plugins.YouTubeMusic-1.0.0-macos.zip",
+          "sha256": "1ba3212d6e201a8105f0c2620ef328ad856d8102118de7cc747f4fdc8eb36d9c",
+          "sizeBytes": 210679,
+          "rid": "macos"
+        },
+        {
+          "version": "1.0.0",
+          "apiVersion": 1,
+          "url": "https://github.com/riddlemd/KHost.Plugins.YouTubeMusic/releases/download/v1.0.0/KHost.Plugins.YouTubeMusic-1.0.0-win.zip",
+          "sha256": "69b7c0dfa8ceafbc3bf7b7d567297914a581533b57aff7663764135501365837",
+          "sizeBytes": 328380,
+          "rid": "win"
+        }
+      ]
+    },
+    {
+      "id": "88f42c92-f15a-443c-afa0-0983f05fdbb4",
+      "name": "YouTube Search",
+      "author": "KHost",
+      "description": "Search YouTube for karaoke videos.",
+      "repository": "https://github.com/riddlemd/KHost.Plugins.YouTube",
+      "capabilities": [
+        "Media provider"
+      ],
+      "releases": [
+        {
+          "version": "1.0.0",
+          "apiVersion": 1,
+          "url": "https://github.com/riddlemd/KHost.Plugins.YouTube/releases/download/v1.0.0/KHost.Plugins.YouTube-1.0.0.zip",
+          "sha256": "9178d5fa23e024d3f8bfba130d8db986bd14a8f6167dd233a5bc34ae637befd2",
+          "sizeBytes": 32594
+        }
+      ]
+    }
+  ]
+}
