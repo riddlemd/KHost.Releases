@@ -15,8 +15,8 @@
           "version": "1.0.0",
           "apiVersion": 1,
           "url": "https://github.com/riddlemd/KHost.Plugins.Chromecast/releases/download/v1.0.0/KHost.Plugins.Chromecast-1.0.0.zip",
-          "sha256": "da1eb19205ef9a9ba8f2f0e4d0f5aa0a51f92f6c152f657c4ee71a7b4c556629",
-          "sizeBytes": 1197565
+          "sha256": "02ae6c49cc5740991802ece93051b588b244d28fa7b8c19405ba1e3b62a32837",
+          "sizeBytes": 1197583
         }
       ]
     },
@@ -32,10 +32,10 @@
       "releases": [
         {
           "version": "1.0.0",
-          "apiVersion": 1,
+          "apiVersion": 4,
           "url": "https://github.com/riddlemd/KHost.Plugins.Spotify/releases/download/v1.0.0/KHost.Plugins.Spotify-1.0.0.zip",
-          "sha256": "87769fbca2f6a8e81d8250a8bbb0ee24b1f27186546397d72b72241df0c17355",
-          "sizeBytes": 48027
+          "sha256": "9706a89af9cf638342c0bf91baefadc9fac48bc72f6fdd480e006e4627b24ecc",
+          "sizeBytes": 46941
         },
         {
           "version": "1.0.0",
@@ -59,10 +59,10 @@
       "releases": [
         {
           "version": "1.0.0",
-          "apiVersion": 1,
+          "apiVersion": 4,
           "url": "https://github.com/riddlemd/KHost.Plugins.YouTubeMusic/releases/download/v1.0.0/KHost.Plugins.YouTubeMusic-1.0.0-macos.zip",
-          "sha256": "9f7027cf4c5372d6a0a2c402e9d86b7346d42312d1ae13e9c80b0d8b13f669fe",
-          "sizeBytes": 218093,
+          "sha256": "f994f00df66c46b68aa9eb05ba21c5321d650a43d2c057f8dd32f22ddc7099d8",
+          "sizeBytes": 210697,
           "rid": "macos"
         },
         {
@@ -89,8 +89,8 @@
           "version": "1.0.0",
           "apiVersion": 1,
           "url": "https://github.com/riddlemd/KHost.Plugins.YouTube/releases/download/v1.0.0/KHost.Plugins.YouTube-1.0.0.zip",
-          "sha256": "9178d5fa23e024d3f8bfba130d8db986bd14a8f6167dd233a5bc34ae637befd2",
-          "sizeBytes": 32594
+          "sha256": "21548325ad15bee56a773d5bf60ecd2bef1b33ed575b057b10c1e2de7bdff5be",
+          "sizeBytes": 34562
         }
       ]
     }
