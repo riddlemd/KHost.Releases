@@ -12,6 +12,13 @@
       ],
       "releases": [
         {
+          "version": "1.1.0",
+          "apiVersion": 6,
+          "url": "https://github.com/riddlemd/KHost.Plugins.Chromecast/releases/download/v1.1.0/KHost.Plugins.Chromecast-1.1.0.zip",
+          "sha256": "6815dd58362dc92621001ad4dc78c93d1978f5908bdaaaaad7679a6d3cf083af",
+          "sizeBytes": 966985
+        },
+        {
           "version": "1.0.0",
           "apiVersion": 1,
           "url": "https://github.com/riddlemd/KHost.Plugins.Chromecast/releases/download/v1.0.0/KHost.Plugins.Chromecast-1.0.0.zip",
@@ -30,6 +37,13 @@
         "Break music"
       ],
       "releases": [
+        {
+          "version": "1.1.0",
+          "apiVersion": 6,
+          "url": "https://github.com/riddlemd/KHost.Plugins.Spotify/releases/download/v1.1.0/KHost.Plugins.Spotify-1.1.0.zip",
+          "sha256": "46d0091c181e24651804a1d044ba00e1a448a92a2b216e795cc3789c29110a3c",
+          "sizeBytes": 48577
+        },
         {
           "version": "1.0.0",
           "apiVersion": 4,
@@ -58,6 +72,14 @@
       ],
       "releases": [
         {
+          "version": "1.1.0",
+          "apiVersion": 6,
+          "url": "https://github.com/riddlemd/KHost.Plugins.YouTubeMusic/releases/download/v1.1.0/KHost.Plugins.YouTubeMusic-1.1.0-macos.zip",
+          "sha256": "6d8dd3b2ad508e912846ef95a94f6e065f9fa9191f0a64d66498a6e903adb76d",
+          "sizeBytes": 212309,
+          "rid": "macos"
+        },
+        {
           "version": "1.0.0",
           "apiVersion": 4,
           "url": "https://github.com/riddlemd/KHost.Plugins.YouTubeMusic/releases/download/v1.0.0/KHost.Plugins.YouTubeMusic-1.0.0-macos.zip",
@@ -85,6 +107,13 @@
         "Media provider"
       ],
       "releases": [
+        {
+          "version": "1.1.0",
+          "apiVersion": 6,
+          "url": "https://github.com/riddlemd/KHost.Plugins.YouTube/releases/download/v1.1.0/KHost.Plugins.YouTube-1.1.0.zip",
+          "sha256": "68b245cceec5bfe2f6a2802062bb9c767da15eed8be88e0c1d0c98f4037f816d",
+          "sizeBytes": 37269
+        },
         {
           "version": "1.0.0",
           "apiVersion": 1,
