@@ -12,6 +12,13 @@
       ],
       "releases": [
         {
+          "version": "1.2.0",
+          "apiVersion": 8,
+          "url": "https://github.com/riddlemd/KHost.Plugins.Chromecast/releases/download/v1.2.0/KHost.Plugins.Chromecast-1.2.0.zip",
+          "sha256": "feff77c93fe816decbb6a6937f7bcec62640fd62c92d8256807fba4ae9200352",
+          "sizeBytes": 966993
+        },
+        {
           "version": "1.1.0",
           "apiVersion": 6,
           "url": "https://github.com/riddlemd/KHost.Plugins.Chromecast/releases/download/v1.1.0/KHost.Plugins.Chromecast-1.1.0.zip",
@@ -37,6 +44,13 @@
         "Break music"
       ],
       "releases": [
+        {
+          "version": "1.2.0",
+          "apiVersion": 8,
+          "url": "https://github.com/riddlemd/KHost.Plugins.Spotify/releases/download/v1.2.0/KHost.Plugins.Spotify-1.2.0.zip",
+          "sha256": "5dcc596c4215bf8bbf186f5dca4303741a6af1952ff415d4c54cd2db1e0ca30c",
+          "sizeBytes": 48578
+        },
         {
           "version": "1.1.0",
           "apiVersion": 6,
@@ -79,6 +93,14 @@
         "Break music"
       ],
       "releases": [
+        {
+          "version": "1.2.0",
+          "apiVersion": 8,
+          "url": "https://github.com/riddlemd/KHost.Plugins.YouTubeMusic/releases/download/v1.2.0/KHost.Plugins.YouTubeMusic-1.2.0-macos.zip",
+          "sha256": "d1fea9927f046d9290d5369e06fb208706793d36595db57c9e201eeceb864414",
+          "sizeBytes": 212303,
+          "rid": "macos"
+        },
         {
           "version": "1.1.0",
           "apiVersion": 6,
@@ -123,6 +145,13 @@
         "Media provider"
       ],
       "releases": [
+        {
+          "version": "1.2.0",
+          "apiVersion": 8,
+          "url": "https://github.com/riddlemd/KHost.Plugins.YouTube/releases/download/v1.2.0/KHost.Plugins.YouTube-1.2.0.zip",
+          "sha256": "7f802ed8c27c9494bc1efe6908739164f8df55fa892cd39ece5fac9d1119c9b3",
+          "sizeBytes": 37262
+        },
         {
           "version": "1.1.0",
           "apiVersion": 6,
