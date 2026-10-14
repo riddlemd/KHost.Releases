@@ -18,11 +18,11 @@ KHost's `PluginCatalog` model is the format's authority; [`tools/validate.py`](t
 
 - `schemaVersion`: a value a host does not know makes it reject the whole file.
 - Per plugin: `id` (the manifest's id), `name`, `author`, `description`, `repository`, `capabilities`.
-- Per release: `version`, `apiVersion` (the plugin API it was **built against**), `url` (https zip), `sha256`, `sizeBytes`, and `rid` (`win`/`macos`/`linux`, absent when it runs anywhere).
+- Per release: `version`, `contractsVersion` (the oldest KHost contracts it needs, as semver, read from the zip's `.deps.json`; absent on releases listed before contracts 1.0), `apiVersion` (the legacy plugin API number, for hosts predating `contractsVersion`), `url` (https zip), `sha256`, `sizeBytes`, and `rid` (`win`/`macos`/`linux`, absent when it runs anywhere).
 
-A host runs plugin APIs from its `MinimumVersion` to its `CurrentVersion` and installs, per plugin, the highest `version` in that range for its platform. So **releases are never removed**: older hosts keep finding the newest build they can run.
+A host on contracts 1.0 or later runs a release whose requirement has its own major and is no newer than its contracts (a 0.61.x requirement counts as major 1); with no `contractsVersion`, `apiVersion` 8 means 0.61.0 and anything else is not for it. An older host reads only `apiVersion` and runs it from its `MinimumVersion` to its `CurrentVersion`, so `apiVersion` is 8 for a 0.61.x requirement and 9 for anything newer, which those hosts refuse. Either way a host installs, per plugin, the highest `version` it runs for its platform. So **releases are never removed**: older hosts keep finding the newest build they can run.
 
-Plugins run inside the host unsandboxed, so this file is their trust root. A host installs only an https download matching its `sha256`, refuses zips with escaping entries, and refuses a manifest whose id or API range does not fit.
+Plugins run inside the host unsandboxed, so this file is their trust root. A host installs only an https download matching its `sha256`, refuses zips with escaping entries, and refuses a payload whose id does not match or whose required contracts it lacks.
 
 ## Adding a release
 
@@ -34,11 +34,11 @@ Plugins run inside the host unsandboxed, so this file is their trust root. A hos
    dotnet run --project tools/KHost.CatalogSync -- riddlemd/KHost.Plugins.Spotify --rid win --asset KHost.Plugins.Spotify-1.0.0-win.zip
    ```
 
-   It downloads anonymously, hashes, cross-checks GitHub's digest and writes the entry from the manifest into this checkout (`--catalog <path>` otherwise; `--tag`, `--capabilities` as needed).
+   It downloads anonymously, hashes, cross-checks GitHub's digest, reads the contracts requirement from the zip's `.deps.json` and writes the entry into this checkout (`--catalog <path>` otherwise; `--tag`, `--capabilities` as needed).
 3. `python3 tools/validate.py plugins.json`, then commit.
 
-Never type a hash, size or `apiVersion` by hand.
+Never type a hash, size, `contractsVersion` or `apiVersion` by hand.
 
 ## Checks
 
-`.github/workflows/validate.yml` runs `validate.py` on push, PR, weekly and on demand. It fails on a shape a host would reject, on any release whose anonymous download, hash or size is wrong, and on a zip whose manifest disagrees with its listing. It warns when a plugin has no release KHost `main` can run. `--offline` checks shape only.
+`.github/workflows/validate.yml` runs `validate.py` on push, PR, weekly and on demand. It fails on a shape a host would reject, on any release whose anonymous download, hash or size is wrong, on a zip whose manifest or `.deps.json` disagrees with its listing, and on an `apiVersion` that is not 8 for a 0.61.x `contractsVersion` and 9 otherwise. It warns when a plugin has no release KHost `main` can run (judged by `main`'s `ContractsVersion` once it is 1.0 or later, else by its `PluginApi` range). `--offline` checks shape only.

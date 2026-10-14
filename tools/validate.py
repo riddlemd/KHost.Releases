@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Checks a KHost catalog file the way a host will read it, then downloads every release to prove it.
 
-    python3 tools/validate.py plugins.json            # shape, downloads, manifests, host range
+    python3 tools/validate.py plugins.json            # shape, downloads, manifests, contracts, host coverage
     python3 tools/validate.py plugins.json --offline  # shape only
 
 Standard library only, so CI needs nothing installed. Exits 1 on any error; a warning never fails.
@@ -18,6 +18,14 @@ import zipfile
 SUPPORTED_SCHEMA = 1
 KNOWN_RIDS = {"win", "macos", "linux"}
 PLUGIN_API_URL = "https://raw.githubusercontent.com/riddlemd/KHost/main/src/KHost.Abstractions/Models/Plugins/PluginApi.cs"
+BUILD_PROPS_URL = "https://raw.githubusercontent.com/riddlemd/KHost/main/Directory.Build.props"
+# Every release built against contracts 0.61 declares this; 1.x hosts run them, older hosts read only it.
+LEGACY_API_VERSION = 8
+LEGACY_CONTRACTS = (0, 61)
+SEMVER = re.compile(
+    r"(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)"
+    r"(?:-((?:0|[1-9]\d*|\d*[A-Za-z-][0-9A-Za-z-]*)(?:\.(?:0|[1-9]\d*|\d*[A-Za-z-][0-9A-Za-z-]*))*))?"
+    r"(?:\+([0-9A-Za-z-]+(?:\.[0-9A-Za-z-]+)*))?")
 USER_AGENT = "KHost.Releases-validate/1.0 (+https://github.com/riddlemd/KHost.Releases)"
 
 errors = []
@@ -38,6 +46,66 @@ def parse_version(text):
     if not 1 <= len(parts) <= 4 or not all(p.isdigit() for p in parts):
         return None
     return tuple(int(p) for p in parts) + (0,) * (4 - len(parts))
+
+
+def parse_semver(text):
+    """(major, minor, patch, prerelease identifiers or None) for a semantic version; None otherwise."""
+    match = SEMVER.fullmatch(str(text).strip()) if text is not None else None
+    if not match:
+        return None
+    prerelease = match.group(4)
+    return int(match.group(1)), int(match.group(2)), int(match.group(3)), prerelease.split(".") if prerelease else None
+
+
+def semver_key(version):
+    """Sorts as semantic versioning orders: a prerelease before its release, numeric ids before others."""
+    major, minor, patch, prerelease = version
+    if prerelease is None:
+        return (major, minor, patch, 1, ())
+    ids = tuple((0, int(p), "") if p.isdigit() else (1, 0, p) for p in prerelease)
+    return (major, minor, patch, 0, ids)
+
+
+def format_semver(version):
+    major, minor, patch, prerelease = version
+    return f"{major}.{minor}.{patch}" + (f"-{'.'.join(prerelease)}" if prerelease else "")
+
+
+def is_legacy(version):
+    return version[:2] == LEGACY_CONTRACTS
+
+
+def legacy_api_version_for(version):
+    """What CatalogSync writes as apiVersion, so hosts predating contractsVersion refuse anything newer."""
+    return LEGACY_API_VERSION if is_legacy(version) else LEGACY_API_VERSION + 1
+
+
+def release_requirement(release):
+    """The contracts a listed release needs, as a host reads it; None when a host cannot judge it."""
+    if release.get("contractsVersion") is not None:
+        return parse_semver(release["contractsVersion"])
+    return (0, 61, 0, None) if release.get("apiVersion") == LEGACY_API_VERSION else None
+
+
+def host_covers(host, required):
+    """KHost's rule: same major (0.61.x counts as major 1) and no newer than the host."""
+    same_line = required[0] == host[0] or (host[0] == 1 and is_legacy(required))
+    return same_line and semver_key(required) <= semver_key(host)
+
+
+def deps_requirement(archive, path):
+    """The KHost.Abstractions version a plugin's .deps.json names; None when absent or unreadable."""
+    try:
+        deps = json.loads(archive.read(path).decode("utf-8-sig"))
+    except (KeyError, ValueError, UnicodeDecodeError):
+        return None
+    libraries = deps.get("libraries") if isinstance(deps, dict) else None
+    if not isinstance(libraries, dict):
+        return None
+    for name in libraries:
+        if name.lower().startswith("khost.abstractions/"):
+            return parse_semver(name.split("/", 1)[1])
+    return None
 
 
 def check_shape(catalog):
@@ -82,6 +150,13 @@ def check_shape(catalog):
             api = release.get("apiVersion")
             if not isinstance(api, int) or api < 1:
                 error(rwhere, f"apiVersion must be a positive integer, is {api!r}")
+            contracts = release.get("contractsVersion")
+            if contracts is not None:
+                if parse_semver(contracts) is None:
+                    error(rwhere, f"contractsVersion must be a semantic version (Major.Minor.Patch), is {contracts!r}")
+                elif api != legacy_api_version_for(parse_semver(contracts)):
+                    error(rwhere, f"apiVersion must be {legacy_api_version_for(parse_semver(contracts))} "
+                                  f"for contractsVersion {contracts}, is {api!r}")
             if not str(release.get("url", "")).startswith("https://"):
                 error(rwhere, "url must be https")
             if not re.fullmatch(r"[0-9a-f]{64}", str(release.get("sha256", ""))):
@@ -151,13 +226,39 @@ def check_download(entry, release):
         error(rwhere, f"manifest id {manifest.get('id')} is not the catalog's {entry.get('id')}")
     if manifest.get("version") != release.get("version"):
         error(rwhere, f"manifest version {manifest.get('version')} is not the catalog's {release.get('version')}")
-    if manifest.get("apiVersion") != release.get("apiVersion"):
+    # A listing written before contractsVersion copied the manifest's number; a newer one derives it.
+    if manifest.get("apiVersion") is not None and release.get("contractsVersion") is None \
+            and manifest.get("apiVersion") != release.get("apiVersion"):
         error(rwhere, f"manifest apiVersion {manifest.get('apiVersion')} is not the catalog's {release.get('apiVersion')}")
     entry_assembly = manifest.get("entryAssembly", "")
     if not entry_assembly or prefix + entry_assembly not in names:
         error(rwhere, f"entryAssembly {entry_assembly!r} is not in the zip")
+    else:
+        deps_path = prefix + entry_assembly.rsplit(".", 1)[0] + ".deps.json"
+        required = deps_requirement(archive, deps_path)
+        if required is None and manifest.get("apiVersion") == LEGACY_API_VERSION:
+            required = (0, 61, 0, None)
+        listed = release.get("contractsVersion")
+        if required is None:
+            error(rwhere, f"{deps_path} names no KHost.Abstractions and the manifest has no apiVersion "
+                          f"{LEGACY_API_VERSION}; a host refuses it")
+        elif listed is not None and parse_semver(listed) is not None \
+                and semver_key(parse_semver(listed)) != semver_key(required):
+            error(rwhere, f"the zip needs contracts {format_semver(required)}, the catalog says {listed}")
     if any(n.endswith(".pdb") for n in names):
         warn(rwhere, "ships a .pdb; release zips should not")
+
+
+def host_contracts():
+    """KHost main's ContractsVersion when it is 1.0.0 or later; None while main still gates on PluginApi."""
+    try:
+        source = fetch(BUILD_PROPS_URL).decode("utf-8")
+    except Exception as ex:
+        warn("host", f"could not read KHost's Directory.Build.props ({ex}); trying PluginApi.cs")
+        return None
+    match = re.search(r"<ContractsVersion>\s*([^<]+?)\s*</ContractsVersion>", source)
+    version = parse_semver(match.group(1)) if match else None
+    return version if version is not None and version[0] >= 1 else None
 
 
 def host_api_range():
@@ -183,6 +284,14 @@ def check_coverage(plugins, api_range):
                  f"no release a current KHost can install (it runs plugin API {minimum}-{current})")
 
 
+def check_contracts_coverage(plugins, host):
+    for entry in plugins:
+        if not any((required := release_requirement(r)) is not None and host_covers(host, required)
+                   for r in entry.get("releases", [])):
+            warn(entry.get("name", "?"),
+                 f"no release a current KHost can install (it has contracts {format_semver(host)})")
+
+
 def main(argv):
     if len(argv) < 2:
         print(__doc__)
@@ -197,7 +306,9 @@ def main(argv):
         for entry in plugins:
             for release in entry.get("releases", []):
                 check_download(entry, release)
-        if (api_range := host_api_range()) is not None:
+        if (host := host_contracts()) is not None:
+            check_contracts_coverage(plugins, host)
+        elif (api_range := host_api_range()) is not None:
             check_coverage(plugins, api_range)
 
     annotate = "--github" in argv[2:]
