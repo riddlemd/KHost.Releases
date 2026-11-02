@@ -150,6 +150,44 @@
           "rid": "win"
         }
       ]
+    },
+    {
+      "id": "88f42c92-f15a-443c-afa0-0983f05fdbb4",
+      "name": "YouTube Search",
+      "author": "Ezra Halden",
+      "description": "Search YouTube for karaoke videos.",
+      "repository": "https://github.com/ezhalden/KHost.Plugins.YouTube",
+      "capabilities": [
+        "Media provider"
+      ],
+      "releases": [
+        {
+          "version": "1.0.0",
+          "apiVersion": 8,
+          "url": "https://github.com/ezhalden/KHost.Plugins.YouTube/releases/download/v1.0.0/KHost.Plugins.YouTube-1.0.0.zip",
+          "sha256": "caacd5a3af133a05952c6d4255b6c353ff7f0a87f147cf4bda79a3bd7b3a4f28",
+          "sizeBytes": 37148
+        }
+      ]
+    },
+    {
+      "id": "e9a7a203-2aae-4f30-b320-e39942a286ed",
+      "name": "KaraFun Integration",
+      "author": "Ezra Halden",
+      "description": "Sign in to KaraFun: search and queue its catalog, and open guest sign-up on the screen.",
+      "repository": "https://github.com/ezhalden/KHost.Plugins.KaraFun",
+      "capabilities": [
+        "Media provider"
+      ],
+      "releases": [
+        {
+          "version": "1.0.0",
+          "apiVersion": 8,
+          "url": "https://github.com/ezhalden/KHost.Plugins.KaraFun/releases/download/v1.0.0/KHost.Plugins.KaraFun-1.0.0.zip",
+          "sha256": "0a1bd1b912ac62da19ea475ddd93b2a380f857d8cb189c98a186431c16b9e5a9",
+          "sizeBytes": 387858
+        }
+      ]
     }
   ]
 }
